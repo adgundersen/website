@@ -1,0 +1,49 @@
+<% content_for :title, "Pricing — Crimata" %>
+
+<style>
+  .pricing { text-align: center; padding: 4rem 0; }
+  .pricing h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
+  .pricing p { color: #555; font-size: 1.1rem; margin-bottom: 3rem; }
+  .card { display: inline-block; border: 1px solid #eee; border-radius: 16px; padding: 2.5rem 3rem; text-align: left; min-width: 320px; }
+  .price { font-size: 3rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.25rem; }
+  .price span { font-size: 1rem; font-weight: 400; color: #555; }
+  .features { list-style: none; margin: 1.5rem 0 2rem; }
+  .features li { padding: 0.4rem 0; color: #444; }
+  .features li::before { content: "✓  "; font-weight: 700; }
+  .sub { margin-top: 1rem; font-size: 0.875rem; color: #999; text-align: center; }
+</style>
+
+<div class="pricing">
+  <h1>Simple pricing.</h1>
+  <p>One plan. Everything included.</p>
+
+  <div class="card">
+    <div class="price">$10 <span>/ month</span></div>
+    <ul class="features">
+      <li>Your own hub at slug.crimata.com</li>
+      <li>Custom domain support</li>
+      <li>Blog with images</li>
+      <li>Fully managed hosting</li>
+      <li>Cancel anytime</li>
+    </ul>
+    <button class="btn" id="checkout-btn" style="width:100%">Get Started</button>
+    <p class="sub">No setup fees.</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('checkout-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('checkout-btn')
+    btn.disabled = true
+    btn.textContent = 'Redirecting...'
+    try {
+      const res = await fetch('/checkout/create_session', { method: 'POST', headers: { 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content } })
+      const data = await res.json()
+      window.location.href = data.url
+    } catch {
+      btn.disabled = false
+      btn.textContent = 'Get Started'
+      alert('Something went wrong. Please try again.')
+    }
+  })
+</script>

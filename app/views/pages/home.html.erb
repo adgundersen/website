@@ -1,0 +1,15 @@
+<% content_for :title, "Crimata — Your digital hub" %>
+
+<style>
+  .hero { text-align: center; padding: 4rem 0; }
+  .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 1.25rem; }
+  .hero p { font-size: 1.2rem; color: #555; margin-bottom: 2.5rem; }
+  .hero .sub { margin-top: 1rem; font-size: 0.875rem; color: #999; }
+</style>
+
+<div class="hero">
+  <h1>Your digital hub,<br>ready in seconds.</h1>
+  <p>Your own space on the web — custom domain, your content, fully managed.</p>
+  <%= link_to "Get Started — $10/mo", pricing_path, class: "btn" %>
+  <p class="sub">No setup fees. Cancel anytime.</p>
+</div>
