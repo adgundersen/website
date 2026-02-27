@@ -24,6 +24,7 @@ end
 
 
 gem "stripe", "~> 18.3"
+gem "resend", "~> 0.12"
 
 gem "dotenv-rails", "~> 3.2"
 

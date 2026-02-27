@@ -23,6 +23,12 @@
     <%= link_to "Crimata", root_path, class: "logo" %>
     <nav>
       <%= link_to "Pricing", pricing_path %>
+      <% if current_customer %>
+        <%= link_to "Dashboard", dashboard_path %>
+        <%= link_to "Sign out", logout_path %>
+      <% else %>
+        <%= link_to "Sign in", login_path %>
+      <% end %>
     </nav>
   </header>
   <main>

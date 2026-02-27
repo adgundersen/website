@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require "uri"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -62,6 +63,13 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Mailer
+  config.action_mailer.delivery_method = :resend
+  config.action_mailer.default_url_options = {
+    host:     URI.parse(ENV.fetch("BASE_URL", "https://crimata.com")).host,
+    protocol: "https"
+  }
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

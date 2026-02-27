@@ -26,24 +26,7 @@
       <li>Fully managed hosting</li>
       <li>Cancel anytime</li>
     </ul>
-    <button class="btn" id="checkout-btn" style="width:100%">Get Started</button>
+    <%= link_to "Get Started", checkout_start_path, class: "btn", style: "width:100%; text-align:center; display:block;" %>
     <p class="sub">No setup fees.</p>
   </div>
 </div>
-
-<script>
-  document.getElementById('checkout-btn').addEventListener('click', async () => {
-    const btn = document.getElementById('checkout-btn')
-    btn.disabled = true
-    btn.textContent = 'Redirecting...'
-    try {
-      const res = await fetch('/checkout/create_session', { method: 'POST', headers: { 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content } })
-      const data = await res.json()
-      window.location.href = data.url
-    } catch {
-      btn.disabled = false
-      btn.textContent = 'Get Started'
-      alert('Something went wrong. Please try again.')
-    }
-  })
-</script>

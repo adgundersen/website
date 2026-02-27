@@ -1,0 +1,16 @@
+<% content_for :title, "Check your email — Crimata" %>
+
+<style>
+  .sent-wrap { max-width: 400px; margin: 0 auto; padding-top: 2rem; text-align: center; }
+  .sent-wrap .icon { font-size: 3rem; margin-bottom: 1.5rem; }
+  .sent-wrap h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+  .sent-wrap p { color: #555; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+  .sent-wrap a { color: #111; font-weight: 500; }
+</style>
+
+<div class="sent-wrap">
+  <div class="icon">&#9993;</div>
+  <h1>Check your email</h1>
+  <p>We sent a sign-in link to your inbox. Click it to continue — the link expires in 15 minutes.</p>
+  <p>Wrong address? <a href="<%= login_path %>">Go back</a> and try again.</p>
+</div>
