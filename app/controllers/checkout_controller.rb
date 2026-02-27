@@ -5,7 +5,7 @@ class CheckoutController < ApplicationController
     session = Stripe::Checkout::Session.create(
       mode: "subscription",
       line_items: [{ price: ENV.fetch("STRIPE_PRICE_ID"), quantity: 1 }],
-      success_url: "#{ENV.fetch("BASE_URL")}/success?session_id={CHECKOUT_SESSION_ID}",
+      success_url: "#{ENV.fetch("BASE_URL")}/dashboard?session_id={CHECKOUT_SESSION_ID}",
       cancel_url:  "#{ENV.fetch("BASE_URL")}/",
     )
     render json: { url: session.url }
@@ -22,17 +22,26 @@ class CheckoutController < ApplicationController
     )
 
     if event["type"] == "checkout.session.completed"
-      session = event["data"]["object"]
-      uri  = URI("#{ENV.fetch("INFRA_SERVICE_URL")}/customers")
+      sess = event["data"]["object"]
+
+      uri  = URI("#{ENV.fetch("INFRA_SERVICE_URL")}/instances")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = uri.scheme == "https"
-      req = Net::HTTP::Post.new(uri.path, "Content-Type" => "application/json")
+      req  = Net::HTTP::Post.new(uri.path, "Content-Type" => "application/json")
       req.body = {
-        stripe_customer_id:     session["customer"],
-        stripe_subscription_id: session["subscription"],
-        email:                  session.dig("customer_details", "email")
+        stripe_customer_id:     sess["customer"],
+        stripe_subscription_id: sess["subscription"],
+        email:                  sess.dig("customer_details", "email")
       }.to_json
-      http.request(req)
+      res = http.request(req)
+
+      body = JSON.parse(res.body)
+      Customer.find_or_create_by(stripe_customer_id: sess["customer"]) do |c|
+        c.stripe_subscription_id = sess["subscription"]
+        c.email                  = sess.dig("customer_details", "email")
+        c.slug                   = body["slug"]
+        c.status                 = body["status"] || "provisioning"
+      end
     end
 
     render json: { status: "ok" }

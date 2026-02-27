@@ -1,0 +1,126 @@
+<% content_for :title, "My Devices — Crimata" %>
+
+<style>
+  .dashboard-header { margin-bottom: 2.5rem; }
+  .dashboard-header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
+  .dashboard-header p { color: #666; margin-top: 0.4rem; font-size: 0.95rem; }
+
+  .devices { display: grid; gap: 1rem; }
+
+  .device-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: #fafafa;
+  }
+  .device-card:hover { border-color: #ccc; background: #fff; }
+
+  .device-icon {
+    width: 52px; height: 52px;
+    background: #111;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .device-icon svg { width: 28px; height: 28px; fill: #fff; }
+
+  .device-info { flex: 1; min-width: 0; }
+  .device-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.2rem; }
+  .device-meta { font-size: 0.85rem; color: #888; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .device-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+  .device-status { flex-shrink: 0; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.78rem; font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+  }
+  .badge.provisioning { background: #fff3cd; color: #856404; }
+  .badge.active { background: #d1fae5; color: #065f46; }
+  .badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+  }
+
+  .device-action { flex-shrink: 0; }
+  .device-action a {
+    font-size: 0.85rem; color: #2563eb; text-decoration: none; font-weight: 500;
+  }
+  .device-action a:hover { text-decoration: underline; }
+  .device-action .disabled { color: #bbb; cursor: default; font-size: 0.85rem; }
+
+  .empty-state {
+    text-align: center; padding: 4rem 0; color: #888;
+  }
+  .empty-state h2 { font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem; }
+
+  .setup-card {
+    border: 1px dashed #e5e5e5;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+  }
+  .setup-card .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid #eee;
+    border-top-color: #111;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .setup-card p { font-size: 0.9rem; margin-top: 0.4rem; }
+</style>
+
+<div class="dashboard-header">
+  <h1>My Devices</h1>
+  <p><%= @customer&.email %></p>
+</div>
+
+<div class="devices">
+  <% if @customer.nil? %>
+    <div class="setup-card">
+      <div class="spinner"></div>
+      <strong>Setting up your device&hellip;</strong>
+      <p>This usually takes a minute. Refresh to check progress.</p>
+    </div>
+  <% else %>
+    <div class="device-card">
+      <div class="device-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h7v2H8v2h8v-2h-3v-2h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm-1 12H5V5h14v10z"/>
+        </svg>
+      </div>
+
+      <div class="device-info">
+        <div class="device-name"><%= @customer.slug || "Your device" %></div>
+        <div class="device-meta">
+          <% if @customer.slug.present? %>
+            <span>&#127758; <%= @customer.slug %>.crimata.com</span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="device-status">
+        <% badge_class = @customer.status == "active" ? "active" : "provisioning" %>
+        <% badge_label = { "active" => "Active", "provisioning" => "Provisioning", "failed" => "Failed" }.fetch(@customer.status, "Pending") %>
+        <span class="badge <%= badge_class %>">
+          <span class="dot"></span><%= badge_label %>
+        </span>
+      </div>
+
+      <div class="device-action">
+        <% if @customer.slug.present? %>
+          <a href="https://<%= @customer.slug %>.crimata.com" target="_blank">Open &rarr;</a>
+        <% else %>
+          <span class="disabled">Not ready yet</span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
