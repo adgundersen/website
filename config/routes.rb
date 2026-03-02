@@ -9,9 +9,6 @@ Rails.application.routes.draw do
   get    "/verify",     to: "sessions#verify",  as: :verify
   get    "/logout",     to: "sessions#destroy", as: :logout
 
-  # Dashboard (requires auth)
-  get "/dashboard", to: "dashboard#show"
-
   # Checkout
   get  "/checkout/start",   to: "checkout#start",   as: :checkout_start
   post "/checkout/webhook", to: "checkout#webhook"

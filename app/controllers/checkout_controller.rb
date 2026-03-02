@@ -17,7 +17,7 @@ class CheckoutController < ApplicationController
       customer_email: current_customer.email,
       mode:           "subscription",
       line_items:     [{ price: ENV.fetch("STRIPE_PRICE_ID"), quantity: 1 }],
-      success_url:    "#{ENV.fetch("BASE_URL")}/dashboard",
+      success_url:    "#{ENV.fetch("BASE_URL")}/",
       cancel_url:     "#{ENV.fetch("BASE_URL")}/pricing",
       metadata:       { customer_id: current_customer.id }
     )

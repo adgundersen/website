@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_after_auth
-    path = session.delete(:return_to) || dashboard_path
+    path = session.delete(:return_to) || root_path
     redirect_to path
   end
 end
